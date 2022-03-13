@@ -1,4 +1,4 @@
-formulario ~>> [
+Formulario         ~>>     [
     <
         tipo: "etiqueta",
         valor: "Nombre:"

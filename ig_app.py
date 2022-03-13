@@ -1,7 +1,9 @@
 import tkinter
 from tkinter import filedialog, ttk, messagebox
+from xml.etree.ElementTree import tostring
 
 def buscador_archivo():
+    global artemp
     artemp = ""
     try:
         archivo = filedialog.askopenfilename(
@@ -11,14 +13,27 @@ def buscador_archivo():
     except:
         messagebox.showerror(message="Seleccione un archivo", title="Alerta")
         return
-    ordenado(artemp)
+    
+    scroll = tkinter.Scrollbar(frameIm)
+    text = tkinter.Text(frameIm)
+    scroll.pack(side=tkinter.RIGHT, fill=tkinter.Y)
+    text.pack(side=tkinter.LEFT, fill=tkinter.Y)
+    text.config(yscrollcommand=scroll.set)
+    text.insert(tkinter.END, artemp)
+    
 
 
-def ordenado(data):
+
+def analizar():
+    data = artemp
     #listas de almacenamiento
     global cadena
     token = []
     error = []
+    columna = 1
+    fila = 1
+    temp = ""
+    tem = ""
     #tokens
     #palabra reservada
     reservada = ""
@@ -28,34 +43,139 @@ def ordenado(data):
     separador = ""
     #variables
     formulario = ""
+    conF = ""
     tipo = ""
     valor = ""
     fondo = ""
     nombre = ""
     valores = ""
-    form_vacio = False
-    formval = False
+    form_vacio = True
+    formval = True
+    conFval = True
     tipoval = False
     valorval = False
     fondoval = False
     nombreval = False
     valoresval = False
+    nform = False
+    form = False
     #Inicio del autómata
     for letra in data:
-        if formval is True:
-            if letra != " " or letra != "~":
-                letra += formulario
+      
+        if letra == "\n":
+            fila += 1
+            columna = 1
+        else:
+            columna += 1
+        
+     
+        if letra == "\n":
+            ""
+        elif letra == " ":
+            ""
+        elif formval is True:                 
+            if letra != "~":                
+                formulario += letra        
             else:
-                formval = False
-        print(letra)        
+                formval = False 
+                tmp = formulario.lower()            
+                if tmp == "formulario" or tmp == "formulário":
+                    tokentemp = "Token reservado"+formulario+" encontrado en Lín. "+str(fila)+", col. "+str(columna)
+                    token.append(tokentemp)
+                else:
+                    errortemp = "Error "+formulario+" encontrado en Lín. "+str(fila)+", col. "+str(columna)
+                    error.append(errortemp)
+                if letra == "~":                
+                    conF += letra                    
+        elif conFval is True:
+            if letra != "[" and letra != "<":
+                conF += letra   
+            else:
+                conFval = False
+                if conF == "~>>":
+                    tokentemp = "Token asignación "+conF+" encontrado en Lín. "+str(fila)+", col. "+str(columna)
+                    token.append(tokentemp)
+                else:
+                    errortemp = "Error "+conF+" encontrado en Lín. "+str(fila)+", col. "+str(columna)
+                    error.append(errortemp)
+                if letra == "[":
+                    tokentemp = "Token apertura lista "+letra+" encontrado en Lín. "+str(fila)+", col. "+str(columna)
+                    token.append(tokentemp)
+                    form = True
+                elif letra == "<":
+                    errortemp = "Error "+letra+" encontrado en Lín. "+str(fila)+", col. "+str(columna)
+                    error.append(errortemp)                    
+        elif form is True:
+            if letra == "<":
+                tokentemp = "Token apertura formulario "+letra+" encontrado en Lín. "+str(fila)+", col. "+str(columna)
+                token.append(tokentemp)
+                nform = True
+            else:
+                if nform is True:                    
+                    if letra != ":":                        
+                        tem += letra
+                        temp = tem.lower()
+                        if temp == "tipo":
+                            tipoval = True
+                            tokentemp = "Token variable "+temp+" encontrado en Lín. "+str(fila)+", col. "+str(columna)
+                            token.append(tokentemp)
+                        elif temp == "valor":
+                            valorval = True  
+                            tokentemp = "Token variable "+temp+" encontrado en Lín. "+str(fila)+", col. "+str(columna)
+                            token.append(tokentemp) 
+                        elif temp == "fondo":
+                            fondoval = True  
+                            tokentemp = "Token variable "+temp+" encontrado en Lín. "+str(fila)+", col. "+str(columna)
+                            token.append(tokentemp) 
+                        elif temp == "nombre":
+                            nombreval = True  
+                            tokentemp = "Token variable "+temp+" encontrado en Lín. "+str(fila)+", col. "+str(columna)
+                            token.append(tokentemp) 
+                        elif temp == "valor":
+                            valoresval = True  
+                            tokentemp = "Token variable "+temp+" encontrado en Lín. "+str(fila)+", col. "+str(columna)
+                            token.append(tokentemp)
+                    else:
+                        temp = ""
+                        nform = False     
+                        tokentemp = "Token asignación "+letra+" encontrado en Lín. "+str(fila)+", col. "+str(columna)
+                        token.append(tokentemp)  
+                elif tipoval is True:
+                    if letra == "\"":
+                        tokentemp = "Token contenedor "+letra+" encontrado en Lín. "+str(fila)+", col. "+str(columna)
+                        token.append(tokentemp)
+                    elif letra != ",":
+                        tipo += letra
+                    else:
+                        tokentemp = "Token separador"+letra+" encontrado en Lín. "+str(fila)+", col. "+str(columna)
+                        token.append(tokentemp)
+                        tipoval = False
+                elif letra == ">":
+                    tokentemp = "Token de cierre "+letra+" encontrado en Lín. "+str(fila)+", col. "+str(columna)
+                    token.append(tokentemp)         
+                    form = False
+        elif letra == ",":
+            tokentemp = "Token separador"+letra+" encontrado en Lín. "+str(fila)+", col. "+str(columna)
+            token.append(tokentemp)
+            form = True
+                    
+                            
+                    
+                
+                     
+            
+        
+        #Aplicando match
+    for a in token:        
+        print(a)
+        print("==================================================")
+    for b in error:      
+        print(b)
+        print("==================================================")
+        
+       
 
-    scroll = tkinter.Scrollbar(frameIm)
-    text = tkinter.Text(frameIm)
-    scroll.pack(side=tkinter.RIGHT, fill=tkinter.Y)
-    text.pack(side=tkinter.LEFT, fill=tkinter.Y)
-    text.config(yscrollcommand=scroll.set)
-    text.insert(tkinter.END, data)
-
+    
 
     # -----------------------------------------------------------------------------------------------------------------------
     # -----------------------------------------------------------------------------------------------------------------------
@@ -174,7 +294,7 @@ boton6.place(x=25, y=5)
 boton6.config(width=12, height=1)
 
 boton7 = tkinter.Button(frameAr, text="Analizar", fg="white", font=(
-    "broadway 12 bold"), command=hola, borderwidth=0, bg="grey")
+    "broadway 12 bold"), command=analizar, borderwidth=0, bg="grey")
 boton7.place(x=205, y=5)
 boton7.config(width=12, height=1)
 
