@@ -38,6 +38,7 @@ def ordenado(data):
     fondoval = False
     nombreval = False
     valoresval = False
+    #Inicio del autómata
     for letra in data:
         print(letra)        
 
