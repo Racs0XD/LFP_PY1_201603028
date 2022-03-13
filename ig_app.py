@@ -27,12 +27,14 @@ def ordenado(data):
     contenido = ""
     separador = ""
     #variables
+    formulario = ""
     tipo = ""
     valor = ""
     fondo = ""
     nombre = ""
     valores = ""
     form_vacio = False
+    formval = False
     tipoval = False
     valorval = False
     fondoval = False
@@ -40,6 +42,11 @@ def ordenado(data):
     valoresval = False
     #Inicio del autómata
     for letra in data:
+        if formval is True:
+            if letra != " " or letra != "~":
+                letra += formulario
+            else:
+                formval = False
         print(letra)        
 
     scroll = tkinter.Scrollbar(frameIm)
