@@ -103,7 +103,7 @@ def analizar():
                     errortemp = "Error ' "+conF+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
                     error.append(errortemp)
                 if letra == "[":
-                    tokentemp = "Token apertura lista ' "+letra+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
+                    tokentemp = "Token apertura documento ' "+letra+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
                     token.append(tokentemp)
                     form = True
                 elif letra == "<":
@@ -150,17 +150,20 @@ def analizar():
                     if letra == "\"":
                         if valista is True:
                             valista = False
+                            tokentemp = "Token cadena ' "+tipo+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
+                            token.append(tokentemp)
                         tokentemp = "Token contenedor ' "+letra+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
                         token.append(tokentemp)
                     elif letra != ">" and letra != "," and letra != "]":
                         tipo += letra
                         valista = True
-                    else:
-                        tokentemp = "Token separador ' "+letra+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
-                        token.append(tokentemp)                        
+                    else:                                               
                         tipoval = False
                         nform = True
-                        if letra == ">":
+                        if letra == ",":
+                            tokentemp = "Token separador ' "+letra+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
+                            token.append(tokentemp) 
+                        elif letra == ">":
                             nform = False
                             tokentemp = "Token cierre de formulario ' "+letra+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
                             token.append(tokentemp)
@@ -173,18 +176,21 @@ def analizar():
                     if letra == "\"":
                         if valista is True:
                             valista = False
+                            tokentemp = "Token cadena ' "+valor+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
+                            token.append(tokentemp)
                         tokentemp = "Token contenedor ' "+letra+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
                         token.append(tokentemp)
                     elif letra != ">" and letra != "," and letra != "]":
                         valor += letra
                         valista = True
-                    else:
-                        tokentemp = "Token separador ' "+letra+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
-                        token.append(tokentemp)  
+                    else:                        
                         valista = False
                         valorval = False              
                         nform = True   
-                        if letra == ">":
+                        if letra == ",":
+                            tokentemp = "Token separador ' "+letra+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
+                            token.append(tokentemp) 
+                        elif letra == ">":
                             nform = False  
                             tokentemp = "Token cierre de formulario ' "+letra+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
                             token.append(tokentemp)
@@ -197,18 +203,21 @@ def analizar():
                     if letra == "\"":
                         if valista is True:
                             valista = False
+                            tokentemp = "Token cadena ' "+fondo+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
+                            token.append(tokentemp)
                         tokentemp = "Token contenedor ' "+letra+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
                         token.append(tokentemp)
                     elif letra != ">" and letra != "," and letra != "]":
                         fondo += letra  
                         valista = True
                     else:
-                        tokentemp = "Token separador ' "+letra+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
-                        token.append(tokentemp)  
                         valista = False
                         fondoval = False 
                         nform = True
-                        if letra == ">":
+                        if letra == ",":
+                            tokentemp = "Token separador ' "+letra+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
+                            token.append(tokentemp) 
+                        elif letra == ">":
                             nform = False
                             tokentemp = "Token cierre de formulario ' "+letra+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
                             token.append(tokentemp)
@@ -221,18 +230,21 @@ def analizar():
                     if letra == "\"":
                         if valista is True:
                             valista = False
+                            tokentemp = "Token cadena ' "+nombre+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
+                            token.append(tokentemp)
                         tokentemp = "Token contenedor ' "+letra+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
                         token.append(tokentemp)
                     elif letra != ">" and letra != "," and letra != "]":
                         nombre += letra
                         valista = True
                     else:
-                        tokentemp = "Token separador ' "+letra+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
-                        token.append(tokentemp)
                         valista = False
                         nombreval = False  
                         nform = True
-                        if letra == ">":
+                        if letra == ",":
+                            tokentemp = "Token separador ' "+letra+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
+                            token.append(tokentemp) 
+                        elif letra == ">":
                             nform = False
                             tokentemp = "Token cierre de formulario ' "+letra+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
                             token.append(tokentemp)
@@ -251,17 +263,16 @@ def analizar():
                         errortemp = "Error contenedor en lista ' "+letra+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
                         error.append(errortemp)
                     elif valista is True:
-                        if letra == "'":
-                            tokentemp = "Token contenedor en lista ' "+letra+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
-                            token.append(tokentemp)
-                        elif letra != ">"  and letra != "]":
+                        if letra != ">"  and letra != "]":
                             valores += letra
                             valista = True
                         else:
                             valista = False
-                            lista_valores = valores
+                            lista_valores = valores                            
                             if letra == "]":
                                 valista = False
+                                tokentemp = "Token cadena ' "+lista_valores+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna-1)
+                                token.append(tokentemp)
                                 tokentemp = "Token cierre de lista ' "+letra+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
                                 token.append(tokentemp)
                             elif letra == ">":
@@ -271,14 +282,19 @@ def analizar():
                     elif letra != ">" and letra != "," and letra != "\"" and letra != "]":
                         valores += letra 
                     else:
-                        tokentemp = "Token separador ' "+letra+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
-                        token.append(tokentemp)
                         lista_valores = valores
                         valores = ""
                         valoresval = False 
                         nform = True
-                        if letra == ">":
+                        if letra == ",":
+                            tokentemp = "Token cadena ' "+lista_valores+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna-1)
+                            token.append(tokentemp)
+                            tokentemp = "Token separador ' "+letra+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
+                            token.append(tokentemp)                             
+                        elif letra == ">":
                             nform = False
+                            tokentemp = "Token cadena ' "+lista_valores+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna-1)
+                            token.append(tokentemp)
                             tokentemp = "Token cierre de formulario ' "+letra+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
                             token.append(tokentemp)
                         elif  letra == "]":
