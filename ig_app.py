@@ -58,6 +58,7 @@ def analizar():
     fondoval = False
     nombreval = False
     valoresval = False
+    valista = False
     nform = False
     form = False
     #Inicio del autómata
@@ -81,10 +82,10 @@ def analizar():
                 formval = False 
                 tmp = formulario.lower()            
                 if tmp == "formulario" or tmp == "formulário":
-                    tokentemp = "Token reservado"+formulario+" encontrado en Lín. "+str(fila)+", col. "+str(columna)
+                    tokentemp = "Token reservado ' "+formulario+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
                     token.append(tokentemp)
                 else:
-                    errortemp = "Error "+formulario+" encontrado en Lín. "+str(fila)+", col. "+str(columna)
+                    errortemp = "Error ' "+formulario+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
                     error.append(errortemp)
                 if letra == "~":                
                     conF += letra                    
@@ -94,148 +95,160 @@ def analizar():
             else:
                 conFval = False
                 if conF == "~>>":
-                    tokentemp = "Token asignación "+conF+" encontrado en Lín. "+str(fila)+", col. "+str(columna)
+                    tokentemp = "Token asignación ' "+conF+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
                     token.append(tokentemp)
                 else:
-                    errortemp = "Error "+conF+" encontrado en Lín. "+str(fila)+", col. "+str(columna)
+                    errortemp = "Error ' "+conF+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
                     error.append(errortemp)
                 if letra == "[":
-                    tokentemp = "Token apertura lista "+letra+" encontrado en Lín. "+str(fila)+", col. "+str(columna)
+                    tokentemp = "Token apertura lista ' "+letra+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
                     token.append(tokentemp)
                     form = True
                 elif letra == "<":
-                    errortemp = "Error "+letra+" encontrado en Lín. "+str(fila)+", col. "+str(columna)
+                    errortemp = "Error ' "+letra+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
                     error.append(errortemp)                    
         elif form is True:
             if letra == "<":
-                tokentemp = "Token apertura formulario "+letra+" encontrado en Lín. "+str(fila)+", col. "+str(columna)
+                tokentemp = "Token apertura formulario ' "+letra+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
                 token.append(tokentemp)
                 nform = True
             else:
                 if nform is True:                    
                     if letra != ":":                        
-                        tem += letra
-                        temp = tem.lower()
+                        temp += letra
                         if temp == "tipo":
                             tipoval = True
-                            tokentemp = "Token variable "+temp+" encontrado en Lín. "+str(fila)+", col. "+str(columna)
-                            token.append(tokentemp)
-                        elif temp == "valor":
-                            valorval = True  
-                            tokentemp = "Token variable "+temp+" encontrado en Lín. "+str(fila)+", col. "+str(columna)
-                            token.append(tokentemp) 
+                            tokentemp = "Token variable ' "+temp+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
+                            token.append(tokentemp)                        
                         elif temp == "fondo":
                             fondoval = True  
-                            tokentemp = "Token variable "+temp+" encontrado en Lín. "+str(fila)+", col. "+str(columna)
+                            tokentemp = "Token variable ' "+temp+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
                             token.append(tokentemp) 
                         elif temp == "nombre":
                             nombreval = True  
-                            tokentemp = "Token variable "+temp+" encontrado en Lín. "+str(fila)+", col. "+str(columna)
+                            tokentemp = "Token variable ' "+temp+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
                             token.append(tokentemp) 
                         elif temp == "valores":
                             valoresval = True  
-                            tokentemp = "Token variable "+temp+" encontrado en Lín. "+str(fila)+", col. "+str(columna)
+                            tokentemp = "Token variable ' "+temp+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
                             token.append(tokentemp)
-                    else:
-                        temp = ""
+                        elif temp == "valor":
+                            valorval = True  
+                            tokentemp = "Token variable ' "+temp+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
+                            token.append(tokentemp)      
+                        elif valorval is True and valoresval is True:
+                            valorval = False                   
+                    else:         
+                        temp = ""               
                         nform = False     
-                        tokentemp = "Token asignación "+letra+" encontrado en Lín. "+str(fila)+", col. "+str(columna)
+                        tokentemp = "Token asignación ' "+letra+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
                         token.append(tokentemp)  
-                #Validación de tipo
+               #Validación de tipo
                 elif tipoval is True:
                     if letra == "\"":
-                        tokentemp = "Token contenedor "+letra+" encontrado en Lín. "+str(fila)+", col. "+str(columna)
+                        tokentemp = "Token contenedor ' "+letra+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
                         token.append(tokentemp)
-                    elif letra != ",":
+                    elif letra != ">" and letra != ",":
                         tipo += letra
                     else:
-                        tokentemp = "Token separador "+letra+" encontrado en Lín. "+str(fila)+", col. "+str(columna)
+                        tokentemp = "Token separador ' "+letra+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
                         token.append(tokentemp)
                         tipoval = False
+                        nform = True
                 #Validación de valor
                 elif valorval is True:
                     if letra == "\"":
-                        tokentemp = "Token contenedor "+letra+" encontrado en Lín. "+str(fila)+", col. "+str(columna)
+                        tokentemp = "Token contenedor ' "+letra+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
                         token.append(tokentemp)
-                    elif letra != ",":
+                    elif letra != ">" and letra != ",":
                         valor += letra
                     else:
-                        tokentemp = "Token separador "+letra+" encontrado en Lín. "+str(fila)+", col. "+str(columna)
+                        tokentemp = "Token separador ' "+letra+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
                         token.append(tokentemp)
-                        valorval = False                    
+                        valorval = False              
+                        nform = True      
                 #Validación de tipo
                 elif tipoval is True:
                     if letra == "\"":
-                        tokentemp = "Token contenedor "+letra+" encontrado en Lín. "+str(fila)+", col. "+str(columna)
+                        tokentemp = "Token contenedor ' "+letra+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
                         token.append(tokentemp)
-                    elif letra != ",":
+                    elif letra != ">" and letra != ",":
                         tipo += letra
                     else:
-                        tokentemp = "Token separador "+letra+" encontrado en Lín. "+str(fila)+", col. "+str(columna)
+                        tokentemp = "Token separador ' "+letra+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
                         token.append(tokentemp)
                         tipoval = False
+                        nform = True
                 #Validación de fondo
                 elif fondoval is True:
                     if letra == "\"":
-                        tokentemp = "Token contenedor "+letra+" encontrado en Lín. "+str(fila)+", col. "+str(columna)
+                        tokentemp = "Token contenedor ' "+letra+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
                         token.append(tokentemp)
-                    elif letra != ",":
+                    elif letra != ">" and letra != ",":
                         fondo += letra
                     else:
-                        tokentemp = "Token separador "+letra+" encontrado en Lín. "+str(fila)+", col. "+str(columna)
+                        tokentemp = "Token separador ' "+letra+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
                         token.append(tokentemp)
-                        fondo = False 
+                        fondoval = False 
+                        nform = True
                 #Validación de nombre
                 elif nombreval is True:
                     if letra == "\"":
-                        tokentemp = "Token contenedor "+letra+" encontrado en Lín. "+str(fila)+", col. "+str(columna)
+                        tokentemp = "Token contenedor ' "+letra+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
                         token.append(tokentemp)
-                    elif letra != ",":
+                    elif letra != ">" and letra != ",":
                         nombre += letra
                     else:
-                        tokentemp = "Token separador "+letra+" encontrado en Lín. "+str(fila)+", col. "+str(columna)
+                        tokentemp = "Token separador ' "+letra+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
                         token.append(tokentemp)
                         nombreval = False  
+                        nform = True
                 #Validación de valores
                 elif valoresval is True:
                     if letra == "[":
-                        tokentemp = "Token contenedor de Lista "+letra+" encontrado en Lín. "+str(fila)+", col. "+str(columna)
+                        tokentemp = "Token contenedor de Lista ' "+letra+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
                         token.append(tokentemp)
                         valista = True
                     elif letra == "]":
-                        tokentemp = "Token de cierre de Lista "+letra+" encontrado en Lín. "+str(fila)+", col. "+str(columna)
+                        tokentemp = "Token de cierre de Lista ' "+letra+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
                         token.append(tokentemp)
                         valista = False
                     elif valista is True:
                         if letra == "'" and letra ==" ":
                             ""
-                        elif letra != ",":
+                        elif letra != ">" and letra != ",":
                             valores += letra
                         else:
                             lista_valores.append(valores)
                             valores = ""
-                    elif letra != ",":
+                    elif letra != ">" and letra != ",":
                         if letra == "'":
-                            errortemp = "Error "+conF+" encontrado en Lín. "+str(fila)+", col. "+str(columna)
+                            errortemp = "Error ' "+conF+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
                             error.append(errortemp)
                         else:
                             valores += letra
                     else:
-                        tokentemp = "Token separador "+letra+" encontrado en Lín. "+str(fila)+", col. "+str(columna)
+                        tokentemp = "Token separador ' "+letra+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
                         token.append(tokentemp)
-                        valorval = False 
-                elif letra == ">":
-                    tokentemp = "Token de cierre "+letra+" encontrado en Lín. "+str(fila)+", col. "+str(columna)
+                        valoresval = False 
+                        nform = True
+                elif letra == ">":                    
+                    tokentemp = "Token de cierre ' "+letra+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
                     token.append(tokentemp)  
                     #agregar validación para apendisar valores a lista      
                     forms = {
                         tipo
                     } 
-                    form = False
+                    form = False    
         elif letra == ",":
-            tokentemp = "Token separador"+letra+" encontrado en Lín. "+str(fila)+", col. "+str(columna)
+            tokentemp = "Token separador ' "+letra+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
             token.append(tokentemp)
             form = True
+        elif letra == "]":
+            print("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT")
+            tokentemp = "Token de cierre de archivo ' "+letra+" ' encontrado en Lín. "+str(fila)+", col. "+str(columna)
+            token.append(tokentemp)
+
                     
                             
                     
