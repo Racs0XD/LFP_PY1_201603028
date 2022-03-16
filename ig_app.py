@@ -1,11 +1,13 @@
 import tkinter
 from tkinter import filedialog, ttk, messagebox
+from turtle import update
 from xml.etree.ElementTree import tostring
 
 from numpy import empty
 
 def buscador_archivo():
-    global text
+    cargado = False
+    
     try:
         archivo = filedialog.askopenfilename(
             title="Selección de archivo form", initialdir="./", filetypes=(("form files", "*.form"), ("all files", "*.*")))
@@ -15,12 +17,18 @@ def buscador_archivo():
         messagebox.showerror(message="Seleccione un archivo", title="Alerta")
         return
     
-    scroll = tkinter.Scrollbar(frameIm)
-    text = tkinter.Text(frameIm, height = 29,width =113)
-    scroll.pack(side=tkinter.RIGHT, fill=tkinter.Y)
-    text.pack(side=tkinter.LEFT, fill=tkinter.Y)
-    text.config(yscrollcommand=scroll.set)
+    if cargado is False:
+        carga(artemp)
+    else:
+        recarga(artemp)
+    
+def carga(artemp):    
     text.insert(tkinter.END, artemp)
+
+def recarga(artemp):
+    text.delete("1.0","end")
+    text.insert(tkinter.END, artemp)
+
 
 def analizar():
     try:        
@@ -44,6 +52,7 @@ def analizar():
     fondo = ""
     nombre = ""
     valores = ""
+    tm = ""
     formval = True
     conFval = True
     tipoval = False
@@ -169,8 +178,14 @@ def analizar():
                             valista = False
                             tokentemp = "Token cadena ' "+tipo+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
                             tokn.append(tokentemp)
+                            tm = "" 
+                        elif not tipo and tm == "cc":
+                            errortemp = "Error cadena vacia, se esperaria informacion, Lin. "+str(fila)+", col. "+str(columna)
+                            error.append(errortemp)  
+                            tm = ""                                                                                
                         tokentemp = "Token contenedor ' "+letra+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
                         tokn.append(tokentemp)
+                        tm  += "c"
                     elif letra != ">" and letra != "," and letra != "]":
                         tipo += letra
                         valista = True
@@ -195,8 +210,14 @@ def analizar():
                             valista = False
                             tokentemp = "Token cadena ' "+valor+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
                             tokn.append(tokentemp)
+                            tm = "" 
+                        elif not valor and tm == "cc":
+                            errortemp = "Error cadena vacia, se esperaria informacion, Lin. "+str(fila)+", col. "+str(columna)
+                            error.append(errortemp)  
+                            tm = ""                                                    
                         tokentemp = "Token contenedor ' "+letra+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
                         tokn.append(tokentemp)
+                        tm  += "c"
                     elif letra != ">" and letra != "," and letra != "]":
                         valor += letra
                         valista = True
@@ -222,8 +243,14 @@ def analizar():
                             valista = False
                             tokentemp = "Token cadena ' "+fondo+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
                             tokn.append(tokentemp)
+                            tm = "" 
+                        elif not fondo and tm == "cc":
+                            errortemp = "Error cadena vacia, se esperaria informacion, Lin. "+str(fila)+", col. "+str(columna)
+                            error.append(errortemp)  
+                            tm = ""                                                    
                         tokentemp = "Token contenedor ' "+letra+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
                         tokn.append(tokentemp)
+                        tm  += "c"
                     elif letra != ">" and letra != "," and letra != "]":
                         fondo += letra  
                         valista = True
@@ -249,8 +276,14 @@ def analizar():
                             valista = False
                             tokentemp = "Token cadena ' "+nombre+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
                             tokn.append(tokentemp)
+                            tm = "" 
+                        elif not nombre and tm == "cc":
+                            errortemp = "Error cadena vacia, se esperaria informacion, Lin. "+str(fila)+", col. "+str(columna)
+                            error.append(errortemp)  
+                            tm = ""                                                    
                         tokentemp = "Token contenedor ' "+letra+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
                         tokn.append(tokentemp)
+                        tm  += "c"                    
                     elif letra != ">" and letra != "," and letra != "]":
                         nombre += letra
                         valista = True
@@ -934,7 +967,12 @@ comboReportes.config(width=20, height=10)
 # ------------------------------------------------------ TextArea --------------------------------------------------------
 # -----------------------------------------------------------------------------------------------------------------------
 # -----------------------------------------------------------------------------------------------------------------------
-
+global text
+scroll = tkinter.Scrollbar(frameIm)
+text = tkinter.Text(frameIm, height = 29,width =113)
+scroll.pack(side=tkinter.RIGHT, fill=tkinter.Y)
+text.pack(side=tkinter.LEFT, fill=tkinter.Y)
+text.config(yscrollcommand=scroll.set)
 
 # -----------------------------------------------------------------------------------------------------------------------
 # -----------------------------------------------------------------------------------------------------------------------
