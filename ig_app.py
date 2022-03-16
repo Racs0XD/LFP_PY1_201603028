@@ -5,8 +5,7 @@ from xml.etree.ElementTree import tostring
 from numpy import empty
 
 def buscador_archivo():
-    global artemp
-    artemp = ""
+    global text
     try:
         archivo = filedialog.askopenfilename(
             title="Selección de archivo form", initialdir="./", filetypes=(("form files", "*.form"), ("all files", "*.*")))
@@ -17,18 +16,15 @@ def buscador_archivo():
         return
     
     scroll = tkinter.Scrollbar(frameIm)
-    text = tkinter.Text(frameIm)
+    text = tkinter.Text(frameIm, height = 29,width =113)
     scroll.pack(side=tkinter.RIGHT, fill=tkinter.Y)
     text.pack(side=tkinter.LEFT, fill=tkinter.Y)
     text.config(yscrollcommand=scroll.set)
     text.insert(tkinter.END, artemp)
-    
-
-
 
 def analizar():
-    try:
-        data = artemp
+    try:        
+        data = text.get(1.0, "end-1c")
     except Exception as e:
         messagebox.showerror(message="Error, no se a cargado archivo para analizar", title="Alerta")    
     
@@ -111,7 +107,7 @@ def analizar():
             else:
                 if nform is True:                    
                     if letra != ":" and letra != "[" and letra != "\"" and letra != "," and letra != "'":                                         
-                        temp += letra
+                        temp += letra.lower()
                         if temp == "tipo":
                             tipoval = True
                             tokentemp = "Token palabra reservada ' "+temp+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
@@ -459,7 +455,7 @@ def rep_error():
     except Exception as e:
         messagebox.showerror(message="Error, no se a cargado o analizado ningúna información", title="Alerta")
     
-    if error == "":
+    if len(error) != 0:
 
         f = open('Reporte_error.html', 'w')  
 
@@ -563,142 +559,189 @@ def generar_form():
     except Exception as e:
         messagebox.showerror(message="Error, no se a cargado o analizado ningúna información", title="Alerta")
     f = open('Formulario.html', 'w')  
-    etiquetaval = False
-    textoval = False
-    radioval = False
-    optionval = False
-    botonval = False
 
-    for a in range(len(formslist)):
-        tipo = formslist[a]['tipo']       
+    if len(error) == 0:
+        etiquetaval = False
+        textoval = False
+        radioval = False
+        optionval = False
+        botonval = False
+
+        for a in range(len(formslist)):
+            tipo = formslist[a]['tipo']     
+
+            if tipo == "etiqueta":
+                etiquetaval = True
+                html_etiqueta = """
+                <h3>
+                {}
+                </h3>            
+                """.format(formslist[a]['valor'])
+            elif tipo == "texto":
+                textoval = True
+                html_texto = """
+                <input type="text" name={} size="40" placeholder={}><br><br>
+                """.format(formslist[a]['valor'],"\""+formslist[a]['fondo']+"\"")
+            elif tipo == "grupo-radio":
+                radioval = True
+                vlores = formslist[a]['valores'].replace("'","").split(",")
+
+                html_r1 = """
+                <form>
+                <label for="radio">{}</label>&nbsp;&nbsp;
+                """.format(formslist[a]['nombre'])
+
+                html_r2 = ""
+                for i in range(len(vlores)):                
+                    r = vlores[i]
+                    
+                    html_r2 += """       
+                    <input type="radio" name="radio" value="valores">
+                    <label for="inf">{}</label>            
+                    """.format(r)
+                                    
+                html_r3 = """            
+                </div>
+                </form>
+                """
+                html_radio = html_r1 + html_r2 + html_r3
+            elif tipo == "grupo-option":
+                optionval = True
+                vlores = formslist[a]['valores'].replace("'","").split(",")
+
+                html_o1 = """
+                <form>
+                <label for="lista">{}</label>&nbsp;&nbsp;
+                <select name="lista" id="lista">
+                """.format(formslist[a]['nombre'])
+
+                html_o2 = ""
+                for i in range(len(vlores)):                
+                    r = vlores[i]
+                    
+                    html_o2 += """      
+                    <option value={}>{}</option>          
+                    """.format(r,r)
+                                    
+                html_o3 = """            
+                    </select>
+                </form>
+                """
+                html_option = html_o1 + html_o2 + html_o3
+            elif tipo == "boton":
+                botonval = True
+                vlores = formslist[a]['valores'].lower()
+
+                if vlores == "entrada":
+                    print(vlores)
+                elif vlores == "formulario":
+                    print(vlores)
+
+                html_boton = """
+                <button type="button">{}</button>
+                """.format(formslist[a]['nombre'])
+
+        html_cabeza = """
+            <head>
+            <meta charset="UTF-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Reporte</title>
+            </head>
+
+            <body>
+
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+                integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 
 
-        if tipo == "etiqueta":
-            etiquetaval = True
-            html_etiqueta = """
-            <h3>
-            {}
-            </h3>            
-            """.format(formslist[a]['valor'])
-        elif tipo == "texto":
-            print(formslist[a]['fondo'])
-            textoval = True
-            html_texto = """
-            <input type="text" name={} size="40" placeholder={}>
-            """.format(formslist[a]['valor'],"\""+formslist[a]['fondo']+"\"")
-        elif tipo == "grupo-radio":
-            radioval = True
-            vlores = formslist[a]['valores'].replace("'","").split(",")
-            print(vlores)
 
-            html_r1 = """
-            <form>
-            <h3>{}</h3>
-            """.format(formslist[a]['nombre'])
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                <a class="navbar-brand"> &nbsp;&nbsp;&nbsp;Reporte</a>
+            </nav>
 
-            for i in range(len(vlores)):                
-                r = vlores[i]
-                print(r)
-                html_r2 = """            
-                <input type="radio" name="radio" value={}>
-                <label for={}>{}</label>            
-            """.format(r,"contactChoice"+str(i),r)
-
-            html_r3 = """
-            </div>
-            </form>
             """
-            html_radio = html_r1 + html_r2 + html_r2
-        elif tipo == "grupo-option":
-            vlores = formslist[a]['valores'].replace("'","").split(",")
-            print(vlores)
-        elif tipo == "boton":
-            vlores = formslist[a]['valores']
-            print(vlores)
+        html_pie="""   
+            <br><br><br><br><br><br>
+            <footer>
+            </footer>
 
-    html_cabeza = """
-        <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Reporte</title>
-        </head>
+            <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+            </body>
+            <style>
+            table {
+            border: #b2b2b2 1px solid;
+            border-collapse: separate;
+            
+            }
+            th {
+            border: black 1px solid;
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #357baa;
+            color: white;
+            }
+            td, th {
+            border: 1px solid #ddd;
+            padding: 8px;
+            }
+            
+            tr:nth-child(even){background-color: #c0c0c0;}
+            
+            tr:hover {background-color: #ddd;}
+            
+            
+            </style>
 
-        <body>
-
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
-            integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-
-
-
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <a class="navbar-brand"> &nbsp;&nbsp;&nbsp;Reporte</a>
-        </nav>
-
-        """
-    html_pie="""   
-        <br><br><br><br><br><br>
-        <footer>
-        </footer>
-
-        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-        crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-        crossorigin="anonymous"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-        crossorigin="anonymous"></script>
-        </body>
-        <style>
-        table {
-        border: #b2b2b2 1px solid;
-        border-collapse: separate;
+            </body>
+            """
         
-        }
-        th {
-        border: black 1px solid;
-        padding-top: 12px;
-        padding-bottom: 12px;
-        text-align: left;
-        background-color: #357baa;
-        color: white;
-        }
-        td, th {
-        border: 1px solid #ddd;
-        padding: 8px;
-        }
+        if etiquetaval is True:
+            html_etiqueta = html_etiqueta
+            etiquetaval = False
+        else:
+            html_etiqueta = ""
         
-        tr:nth-child(even){background-color: #c0c0c0;}
-        
-        tr:hover {background-color: #ddd;}
-        
-        
-        </style>
+        if textoval is True:
+            html_texto = html_texto
+            textoval = False
+        else:
+            html_texto = ""
 
-        </body>
-        """
-    
-    if etiquetaval is True:
-        html_etiqueta = html_etiqueta
+        if radioval is True:
+            html_radio = html_radio
+            radioval = False
+        else:
+            html_radio = ""
+
+        if optionval is True:
+            html_option = html_option
+            optionval = False
+        else:
+            html_option = ""
+
+        if botonval is True:
+            html_boton = html_boton
+            botonval = False
+        else:
+            html_boton = ""
+
+
+        html = html_cabeza  + html_etiqueta + html_texto + html_radio + html_option + html_boton + html_pie        
+        f.write(html)     
+        f.close()     
+        file = webbrowser.open('Formulario.html')  
     else:
-        html_etiqueta = ""
-    
-    if textoval is True:
-        html_texto = html_texto
-    else:
-        html_texto = ""
-
-    if radioval is True:
-        html_radio = html_radio
-    else:
-        html_radio = ""
-
-    html = html_cabeza  + html_etiqueta + html_texto + html_radio + html_pie        
-    f.write(html)     
-    f.close()     
-    file = webbrowser.open('Formulario.html')  
+        messagebox.showerror(message="El documento contiene errores", title="Alerta")
     
     
 
@@ -758,11 +801,11 @@ frameBu.config(relief="ridge")
 
 frameIm = tkinter.Frame(frame)
 # Establece la posición del componente
-frameIm.place(x=140, y=65)
+frameIm.place(x=20, y=20)
 # Color de fondo, background
 frameIm.config(bg="white")
 # Podemos establecer un tamaño
-frameIm.config(width=680, height=405)
+frameIm.config(width=940, height=490)
 # Establece el ancho del borde
 frameIm.config(bd=10)
 # Establece el tipo de relieve para el borde
