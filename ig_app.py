@@ -54,6 +54,7 @@ def analizar():
     valista = False
     nform = False
     form = False
+    reservada = True
     #Inicio del autómata
     for letra in data:
              
@@ -77,7 +78,7 @@ def analizar():
                     tokentemp = "Token palabra reservada ' "+formulario+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
                     tokn.append(tokentemp)
                 else:
-                    errortemp = "Error ' "+formulario+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
+                    errortemp = "Error ' "+formulario+" ' se esperaria ' formulario ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
                     error.append(errortemp)
                 if letra == "~":                
                     conF += letra                    
@@ -90,16 +91,17 @@ def analizar():
                     tokentemp = "Token asignacion ' "+conF+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
                     tokn.append(tokentemp)
                 else:
-                    errortemp = "Error ' "+conF+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
+                    errortemp = "Error ' "+conF+" ' se esperaria ' ~>> ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
                     error.append(errortemp)
                 if letra == "[":
                     tokentemp = "Token apertura documento ' "+letra+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
                     tokn.append(tokentemp)
                     form = True
                 elif letra == "<":
-                    errortemp = "Error ' "+letra+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
+                    errortemp = "Error ' "+letra+" ' se esperaria ' [ ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
                     error.append(errortemp)  
         elif form is True:
+
             if letra == "<":
                 tokentemp = "Token apertura formulario ' "+letra+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
                 tokn.append(tokentemp)
@@ -108,33 +110,58 @@ def analizar():
                 if nform is True:                    
                     if letra != ":" and letra != "[" and letra != "\"" and letra != "," and letra != "'":                                         
                         temp += letra.lower()
-                        if temp == "tipo":
+                        if temp == "tipo" or temp == "típo":
                             tipoval = True
+                            reservada = True
                             tokentemp = "Token palabra reservada ' "+temp+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
                             tokn.append(tokentemp)                 
-                        elif temp == "fondo":
-                            fondoval = True  
+                        elif temp == "fondo" or temp == "fóndo":
+                            fondoval = True 
+                            reservada = True 
                             tokentemp = "Token palabra reservada ' "+temp+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
                             tokn.append(tokentemp)   
-                        elif temp == "nombre":
+                        elif temp == "nombre" or temp == "nómbre":
                             nombreval = True  
+                            reservada = True
                             tokentemp = "Token palabra reservada ' "+temp+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
                             tokn.append(tokentemp)    
-                        elif temp == "valor":
+                        elif temp == "valor" or temp == "valór":
                             valorval = True  
+                            reservada = True
                             tokentemp = "Token palabra reservada ' "+temp+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
-                            tokn.append(tokentemp)                         
-                        elif temp == "valores":
+                            tokn.append(tokentemp)   
+                        elif valorval is True:
+                            reservada = False
+                            valorval = False                                              
+                        elif temp == "valores" or temp == "valóres":
                             valoresval = True  
+                            reservada = True
                             tokentemp = "Token palabra reservada ' "+temp+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
                             tokn.append(tokentemp)    
-                            if valorval is True:
-                                valorval = False     
+                                 
+                            
                     else:     
-                        tokentemp = "Token de asignacion' "+letra+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
-                        tokn.append(tokentemp)     
-                        temp = ""               
-                        nform = False      
+                        if letra == ":":
+                            if temp == "":
+                                errortemp = "Error ' "+letra+" ' se esperaria ' tipo, valor, fondo, nombre o valores ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
+                                error.append(errortemp) 
+                            elif  temp != "tipo" and temp != "típo" and temp != "fondo" and temp != "fóndo" and temp != "nombre" and temp != "nómbre" and temp != "valor" and temp != "valór" and temp != "valores" and temp != "valóres":
+                               errortemp = "Error ' "+ temp +" ' se esperaria palabra reservada ' tipo, valor, fondo, nombre o valores ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
+                               error.append(errortemp) 
+                               temp = "" 
+                               reservada = False
+                               nform = False                            
+                            else:
+                                tokentemp = "Token de asignacion' "+letra+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
+                                tokn.append(tokentemp)     
+                                temp = ""               
+                                nform = False 
+                        elif letra == "[" or letra == "\"" or letra == "," or letra != "'":
+                                errortemp = "Error ' "+ letra +" ' se esperaria ' : ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
+                                error.append(errortemp)  
+                                nform = False
+                                temp = "" 
+                             
                #Validación de tipo
                 elif tipoval is True:
                     if letra == "\"":
@@ -333,9 +360,12 @@ def analizar():
                     nombre = ""
                     valores = ""
                     if letra == ",":
-                        nform = True
-                        tokentemp = "Token separador ' "+letra+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
-                        tokn.append(tokentemp)
+                        if reservada is False:
+                            nform = False
+                        else:                        
+                            tokentemp = "Token separador ' "+letra+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
+                            nform = True
+                            tokn.append(tokentemp)
                     elif letra == "]":
                         tokentemp = "Token cierre de documento ' "+letra+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
                         tokn.append(tokentemp)    
@@ -347,211 +377,211 @@ import webbrowser
 
 def rep_token():
     try:
-        analizar()
+        if tokn is not empty:
+
+            f = open('Reporte_token.html', 'w')  
+
+            html_cabeza = """
+            <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Reporte de Token</title>
+        </head>
+
+        <body>
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+            integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+
+
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand"> &nbsp;&nbsp;&nbsp;Reporte</a>
+        </nav>
+
+        """
+            html_header = '''
+            <center>
+            <h3>
+            Lista de tokens
+            </h3>
+            </center>
+            <table border="1", style="margin: 0 auto;",class="default">
+            <tr>
+            <th>Tokens</th>
+            </tr>
+            '''
+            html_mid = ''
+            for a in range(len(tokn)):
+                n = tokn[a]
+                html_mid += '''<tr>
+            <td>{}</td>
+            </tr>'''.format(n)
+
+            hmtl_end = """</table><br><br>
+            """
+            html_pie="""
+
+
+            <br><br><br><br><br><br>
+            <footer>
+            </footer>
+
+            <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+        </body>
+        <style>
+            table {
+            border: #b2b2b2 1px solid;
+            border-collapse: separate;
+
+            }
+            th {
+            border: black 1px solid;
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #357baa;
+            color: white;
+            }
+            td, th {
+            border: 1px solid #ddd;
+            padding: 8px;
+            }
+
+            tr:nth-child(even){background-color: #c0c0c0;}
+
+            tr:hover {background-color: #ddd;}
+
+
+            </style>
+
+        </body>
+            """
+
+            html = html_cabeza  + html_header + html_mid + hmtl_end + html_pie
+
+            f.write(html)     
+            f.close()     
+            file = webbrowser.open('Reporte_token.html')  
+        else:
+            messagebox.showerror(message="No tienes ningún token", title="Alerta")
     except Exception as e:
         messagebox.showerror(message="Error, no se a cargado o analizado ningúna información", title="Alerta")
     
-    if tokn is not empty:
-
-        f = open('Reporte_token.html', 'w')  
-
-        html_cabeza = """
-        <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reporte de Token</title>
-    </head>
-
-    <body>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-
-
-
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand"> &nbsp;&nbsp;&nbsp;Reporte</a>
-    </nav>
-
-    """
-        html_header = '''
-        <center>
-        <h3>
-        Lista de tokens
-        </h3>
-        </center>
-        <table border="1", style="margin: 0 auto;",class="default">
-        <tr>
-        <th>Tokens</th>
-        </tr>
-        '''
-        html_mid = ''
-        for a in range(len(tokn)):
-            n = tokn[a]
-            html_mid += '''<tr>
-        <td>{}</td>
-        </tr>'''.format(n)
-
-        hmtl_end = """</table><br><br>
-        """
-        html_pie="""
     
-
-        <br><br><br><br><br><br>
-        <footer>
-        </footer>
-
-        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-        crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-        crossorigin="anonymous"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-        crossorigin="anonymous"></script>
-    </body>
-    <style>
-        table {
-        border: #b2b2b2 1px solid;
-        border-collapse: separate;
-        
-        }
-        th {
-        border: black 1px solid;
-        padding-top: 12px;
-        padding-bottom: 12px;
-        text-align: left;
-        background-color: #357baa;
-        color: white;
-        }
-        td, th {
-        border: 1px solid #ddd;
-        padding: 8px;
-        }
-        
-        tr:nth-child(even){background-color: #c0c0c0;}
-        
-        tr:hover {background-color: #ddd;}
-        
-        
-        </style>
-
-    </body>
-        """
-
-        html = html_cabeza  + html_header + html_mid + hmtl_end + html_pie
-        
-        f.write(html)     
-        f.close()     
-        file = webbrowser.open('Reporte_token.html')  
-    else:
-        messagebox.showerror(message="No tienes ningún token", title="Alerta")
 
 def rep_error():
     try:
-        analizar()
+        if len(error) != 0:
+
+            f = open('Reporte_error.html', 'w')  
+
+            html_cabeza = """
+            <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Reporte de Errores</title>
+        </head>
+
+        <body>
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+            integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+
+
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand"> &nbsp;&nbsp;&nbsp;Reporte</a>
+        </nav>
+
+        """
+            html_header = '''
+            <center>
+            <h3>
+            Lista de errores
+            </h3>
+            </center>
+            <table border="1", style="margin: 0 auto;",class="default">
+            <tr>
+            <th>Errores</th>
+            </tr>
+            '''
+            html_mid = ''
+            for a in range(len(error)):
+                n = error[a]
+                html_mid += '''<tr>
+            <td>{}</td>
+            </tr>'''.format(n)
+
+            hmtl_end = """</table><br><br>
+            """
+            html_pie="""
+
+
+            <br><br><br><br><br><br>
+            <footer>
+            </footer>
+
+            <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+        </body>
+        <style>
+            table {
+            border: #b2b2b2 1px solid;
+            border-collapse: separate;
+
+            }
+            th {
+            border: black 1px solid;
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #357baa;
+            color: white;
+            }
+            td, th {
+            border: 1px solid #ddd;
+            padding: 8px;
+            }
+
+            tr:nth-child(even){background-color: #c0c0c0;}
+
+            tr:hover {background-color: #ddd;}
+
+
+            </style>
+
+        </body>
+            """
+
+            html = html_cabeza  + html_header + html_mid + hmtl_end + html_pie
+
+            f.write(html)     
+            f.close()     
+            file = webbrowser.open('Reporte_error.html')  
+        else:
+            messagebox.showerror(message="Felicidades no tienes errores", title="Alerta")
     except Exception as e:
         messagebox.showerror(message="Error, no se a cargado o analizado ningúna información", title="Alerta")
     
-    if len(error) != 0:
-
-        f = open('Reporte_error.html', 'w')  
-
-        html_cabeza = """
-        <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reporte de Errores</title>
-    </head>
-
-    <body>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-
-
-
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand"> &nbsp;&nbsp;&nbsp;Reporte</a>
-    </nav>
-
-    """
-        html_header = '''
-        <center>
-        <h3>
-        Lista de errores
-        </h3>
-        </center>
-        <table border="1", style="margin: 0 auto;",class="default">
-        <tr>
-        <th>Errores</th>
-        </tr>
-        '''
-        html_mid = ''
-        for a in range(len(error)):
-            n = error[a]
-            html_mid += '''<tr>
-        <td>{}</td>
-        </tr>'''.format(n)
-
-        hmtl_end = """</table><br><br>
-        """
-        html_pie="""
     
-
-        <br><br><br><br><br><br>
-        <footer>
-        </footer>
-
-        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-        crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-        crossorigin="anonymous"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-        crossorigin="anonymous"></script>
-    </body>
-    <style>
-        table {
-        border: #b2b2b2 1px solid;
-        border-collapse: separate;
-        
-        }
-        th {
-        border: black 1px solid;
-        padding-top: 12px;
-        padding-bottom: 12px;
-        text-align: left;
-        background-color: #357baa;
-        color: white;
-        }
-        td, th {
-        border: 1px solid #ddd;
-        padding: 8px;
-        }
-        
-        tr:nth-child(even){background-color: #c0c0c0;}
-        
-        tr:hover {background-color: #ddd;}
-        
-        
-        </style>
-
-    </body>
-        """
-
-        html = html_cabeza  + html_header + html_mid + hmtl_end + html_pie
-        
-        f.write(html)     
-        f.close()     
-        file = webbrowser.open('Reporte_error.html')  
-    else:
-        messagebox.showerror(message="Felicidades no tienes errores", title="Alerta")
 
 def generar_form():
     try:
