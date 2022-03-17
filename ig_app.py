@@ -176,8 +176,12 @@ def analizar():
                     if letra == "\"":
                         if valista is True:
                             valista = False
-                            tokentemp = "Token cadena ' "+tipo+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
-                            tokn.append(tokentemp)
+                            if tipo.lower() == "etiqueta" or tipo.lower() == "etiquéta" or tipo.lower() == "texto" or tipo.lower() == "téxto" or tipo.lower() == "grupo-radio" or tipo.lower() == "radio" or tipo.lower() == "grúpo-radio" or tipo.lower() == "grupo-rádio" or tipo.lower() == "grúpo-rádio" or tipo.lower() == "grupo-option" or tipo.lower() == "grúpo-option" or tipo.lower() == "botón" or tipo.lower() == "boton":
+                                tokentemp = "Token cadena ' "+tipo+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
+                                tokn.append(tokentemp)
+                            else:
+                                errortemp = "Error tipo ' "+tipo+" ' no existente, se esperaria etiqueta, texto, grupo-radio, grupo-option, boton, Lin. "+str(fila)+", col. "+str(columna)
+                                error.append(errortemp) 
                             tm = "" 
                         elif not tipo and tm == "cc":
                             errortemp = "Error cadena vacia, se esperaria informacion, Lin. "+str(fila)+", col. "+str(columna)
@@ -702,7 +706,7 @@ def generar_form():
                     {}
                     </textarea>
                     
-                    """.format(artemp) 
+                    """.format(text.get(1.0, "end-1c")) 
                     html_boton3="""  
                     <style>
                       textarea {

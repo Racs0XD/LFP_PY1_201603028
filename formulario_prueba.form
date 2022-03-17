@@ -22,6 +22,6 @@ Formulario         ~>>     [
     <
         tipo: "boton",
         nombre: "Valor",
-        valores: info
+        valores: entrada
     >
 ]
