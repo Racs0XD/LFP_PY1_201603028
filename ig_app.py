@@ -713,9 +713,13 @@ def generar_form():
                       display: none;                      
                       }                      
                     </style>                
-                    <script>
+                    <script>                    
+                    
                     function f() {
-                      var x = document.getElementById("myDIV");
+                    var y = document.getElementById("myDIV").value;
+                    var x = document.getElementById("myDIV");
+                    alert(y);
+                      
                       if (x.style.display === "none") {
                         x.style.display = "block";
                       } else {
@@ -733,7 +737,7 @@ def generar_form():
                     
                     
                     """
-                    html_boton3="""                         
+                    html_boton3="""               
                     <h4 id="inp"></h4>
                     <h4 id="rad"></h4>
                     <h4 id="lis"></h4> <br>
@@ -748,6 +752,9 @@ def generar_form():
                     var z = document.getElementById('list');
                     var val = z.options[z.selectedIndex].value;
                     document.getElementById("lis").innerHTML = val;
+                    
+                    
+                    alert(x+"  "+y+"  "+val);
                     }
                     </script>
                     """
