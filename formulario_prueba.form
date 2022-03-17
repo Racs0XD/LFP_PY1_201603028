@@ -1,7 +1,8 @@
 Formulario         ~>>     [
     <
-        valor: "Nombre:",
-        tipo: "etiqueta"
+        tipo: "etiqueta",
+        valor: "Nombre:"
+        
     >,
     <
         tipo: "texto",

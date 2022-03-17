@@ -191,10 +191,10 @@ def analizar():
                         valista = True
                     else:                                               
                         tipoval = False
-                        nform = True
+                        nform = True                        
                         if letra == ",":
                             tokentemp = "Token separador ' "+letra+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
-                            tokn.append(tokentemp) 
+                            tokn.append(tokentemp)                             
                         elif letra == ">":
                             nform = False
                             tokentemp = "Token cierre de formulario ' "+letra+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
@@ -203,6 +203,7 @@ def analizar():
                             nform = False
                             errortemp = "Error cierre de documento ' "+letra+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
                             error.append(errortemp)
+                        
                 #Validación de valor
                 elif valorval is True:
                     if letra == "\"":
@@ -404,8 +405,6 @@ def analizar():
                         tokn.append(tokentemp)    
     generar_form()
 
-    
-        
 import webbrowser
 
 def rep_token():
