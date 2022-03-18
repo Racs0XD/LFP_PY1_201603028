@@ -103,7 +103,7 @@ def analizar():
                     errortemp = "Error ' "+conF+" ' se esperaria ' ~>> ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
                     error.append(errortemp)
                 if letra == "[":
-                    tokentemp = "Token apertura documento ' "+letra+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
+                    tokentemp = "Token contenedor apertura documento ' "+letra+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
                     tokn.append(tokentemp)
                     form = True
                 elif letra == "<":
@@ -112,7 +112,7 @@ def analizar():
         elif form is True:
 
             if letra == "<":
-                tokentemp = "Token apertura formulario ' "+letra+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
+                tokentemp = "Token contenedor apertura formulario ' "+letra+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
                 tokn.append(tokentemp)
                 nform = True
             else:
@@ -177,17 +177,17 @@ def analizar():
                         if valista is True:
                             valista = False
                             if tipo.lower() == "etiqueta" or tipo.lower() == "etiquéta" or tipo.lower() == "texto" or tipo.lower() == "téxto" or tipo.lower() == "grupo-radio" or tipo.lower() == "radio" or tipo.lower() == "grúpo-radio" or tipo.lower() == "grupo-rádio" or tipo.lower() == "grúpo-rádio" or tipo.lower() == "grupo-option" or tipo.lower() == "grúpo-option" or tipo.lower() == "botón" or tipo.lower() == "boton":
-                                tokentemp = "Token cadena ' "+tipo+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
+                                tokentemp = "Token palabra reservada tipo ' "+tipo+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
                                 tokn.append(tokentemp)
                             else:
-                                errortemp = "Error tipo ' "+tipo+" ' no existente, se esperaria etiqueta, texto, grupo-radio, grupo-option, boton, Lin. "+str(fila)+", col. "+str(columna)
+                                errortemp = "Error palabra reservada tipo ' "+tipo+" ' no existente, se esperaria etiqueta, texto, grupo-radio, grupo-option, boton, Lin. "+str(fila)+", col. "+str(columna)
                                 error.append(errortemp) 
                             tm = "" 
                         elif not tipo and tm == "cc":
                             errortemp = "Error cadena vacia, se esperaria informacion, Lin. "+str(fila)+", col. "+str(columna)
                             error.append(errortemp)  
                             tm = ""                                                                                
-                        tokentemp = "Token contenedor ' "+letra+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
+                        tokentemp = "Token contenedor cadena ' "+letra+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
                         tokn.append(tokentemp)
                         tm  += "c"
                     elif letra != ">" and letra != "," and letra != "]":
@@ -201,7 +201,7 @@ def analizar():
                             tokn.append(tokentemp)                             
                         elif letra == ">":
                             nform = False
-                            tokentemp = "Token cierre de formulario ' "+letra+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
+                            tokentemp = "Token contenedor cierre de formulario ' "+letra+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
                             tokn.append(tokentemp)
                         elif  letra == "]":
                             nform = False
@@ -220,7 +220,7 @@ def analizar():
                             errortemp = "Error cadena vacia, se esperaria informacion, Lin. "+str(fila)+", col. "+str(columna)
                             error.append(errortemp)  
                             tm = ""                                                    
-                        tokentemp = "Token contenedor ' "+letra+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
+                        tokentemp = "Token contenedor cadena ' "+letra+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
                         tokn.append(tokentemp)
                         tm  += "c"
                     elif letra != ">" and letra != "," and letra != "]":
@@ -235,7 +235,7 @@ def analizar():
                             tokn.append(tokentemp) 
                         elif letra == ">":
                             nform = False  
-                            tokentemp = "Token cierre de formulario ' "+letra+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
+                            tokentemp = "Token contenedor cierre de formulario ' "+letra+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
                             tokn.append(tokentemp)
                         elif  letra == "]":
                             nform = False
@@ -253,7 +253,7 @@ def analizar():
                             errortemp = "Error cadena vacia, se esperaria informacion, Lin. "+str(fila)+", col. "+str(columna)
                             error.append(errortemp)  
                             tm = ""                                                    
-                        tokentemp = "Token contenedor ' "+letra+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
+                        tokentemp = "Token contenedor cadena' "+letra+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
                         tokn.append(tokentemp)
                         tm  += "c"
                     elif letra != ">" and letra != "," and letra != "]":
@@ -268,7 +268,7 @@ def analizar():
                             tokn.append(tokentemp) 
                         elif letra == ">":
                             nform = False
-                            tokentemp = "Token cierre de formulario ' "+letra+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
+                            tokentemp = "Token contenedor cierre de formulario ' "+letra+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
                             tokn.append(tokentemp)
                         elif  letra == "]":
                             nform = False
@@ -286,7 +286,7 @@ def analizar():
                             errortemp = "Error cadena vacia, se esperaria informacion, Lin. "+str(fila)+", col. "+str(columna)
                             error.append(errortemp)  
                             tm = ""                                                    
-                        tokentemp = "Token contenedor ' "+letra+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
+                        tokentemp = "Token contenedor cadena ' "+letra+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
                         tokn.append(tokentemp)
                         tm  += "c"                    
                     elif letra != ">" and letra != "," and letra != "]":
@@ -301,7 +301,7 @@ def analizar():
                             tokn.append(tokentemp) 
                         elif letra == ">":
                             nform = False
-                            tokentemp = "Token cierre de formulario ' "+letra+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
+                            tokentemp = "Token contenedor cierre de formulario ' "+letra+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
                             tokn.append(tokentemp)
                         elif  letra == "]":
                             nform = False
@@ -311,7 +311,7 @@ def analizar():
                 elif valoresval is True:
                     if letra == "[":
                         valista = True
-                        tokentemp = "Token apertura de lista ' "+letra+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
+                        tokentemp = "Token contenedor apertura de lista ' "+letra+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
                         tokn.append(tokentemp)
                     elif valista is False and letra == "'":
                         valista = True
@@ -328,7 +328,7 @@ def analizar():
                                 valista = False
                                 tokentemp = "Token cadena ' "+lista_valores+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna-1)
                                 tokn.append(tokentemp)
-                                tokentemp = "Token cierre de lista ' "+letra+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
+                                tokentemp = "Token contenedor cierre de lista ' "+letra+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
                                 tokn.append(tokentemp)
                             elif letra == ">":
                                 valista = False
@@ -350,7 +350,7 @@ def analizar():
                             nform = False
                             tokentemp = "Token cadena ' "+lista_valores+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna-1)
                             tokn.append(tokentemp)
-                            tokentemp = "Token cierre de formulario ' "+letra+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
+                            tokentemp = "Token contenedor cierre de formulario ' "+letra+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
                             tokn.append(tokentemp)
                         elif  letra == "]":
                             nform = False
@@ -405,7 +405,7 @@ def analizar():
                             nform = True
                             tokn.append(tokentemp)
                     elif letra == "]":
-                        tokentemp = "Token cierre de documento ' "+letra+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
+                        tokentemp = "Token contenedor cierre de documento ' "+letra+" ' encontrado en Lin. "+str(fila)+", col. "+str(columna)
                         tokn.append(tokentemp)    
     generar_form()
 

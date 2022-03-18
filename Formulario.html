@@ -49,30 +49,56 @@
                     </select>
                 </form>
                 
-                    <input type="submit" onclick="f()" value=Valor><br>                         
+                    <input type="submit" onclick="f()" value=Valor>                         
                     
+                    <textarea id="myDIV" rows="20" cols="80" readonly>
+                    Formulario         ~>>     [
+    <
+        tipo: "etiqueta",
+        valor: "Nombre:"
+        
+    >,
+    <
+        tipo: "texto",
+        valor: "Nombre",
+        fondo: "Ingrese nombre"
+    >,
+    <
+        tipo: "grupo-radio",
+        nombre: "Sexo",
+        valores: ['Masculino', 'Femenino']
+    >,
+    <
+        tipo: "grupo-option",
+        nombre: "pais",
+        valores: ['Guatemala', 'El Salvador', 'Honduras']
+    >,
+    <
+        tipo: "boton",
+        nombre: "Valor",
+        valores: entrada
+    >
+]
+                    </textarea>
                     
+                      
+                    <style>
+                      textarea {
+                      display: none;                      
+                      }                      
+                    </style>                
+                    <script>                    
                     
-                                   
-                    <h4 id="inp"></h4>
-                    <h4 id="rad"></h4>
-                    <h4 id="lis"></h4> <br>
-                    <script>
                     function f() {
-                    var x = document.getElementById("txt").value;
-                    document.getElementById("inp").innerHTML = x;
-
-                    var y = document.querySelector('input[name="radio"]:checked').value;
-                    document.getElementById("rad").innerHTML = y;
-
-                    var z = document.getElementById('list');
-                    var val = z.options[z.selectedIndex].value;
-                    document.getElementById("lis").innerHTML = val;
-                    
-                    
-                    alert(x+" 
- "+y+" 
- "+val);
+                    var y = document.getElementById("myDIV").value;
+                    var x = document.getElementById("myDIV");
+                    alert(y);
+                      
+                      if (x.style.display === "none") {
+                        x.style.display = "block";
+                      } else {
+                        x.style.display = "none";
+                      }
                     }
                     </script>
                        
