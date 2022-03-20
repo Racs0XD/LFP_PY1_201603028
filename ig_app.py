@@ -1127,7 +1127,86 @@ def generar_form():
         file = webbrowser.open('Formulario.html')  
     else:
         messagebox.showerror(message="El documento contiene errores", title="Alerta")
-    
+
+def manual_tecnico():
+    f = open('Tecnico.html', 'w')
+
+    html_cabeza = """
+            <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Reporte de Token</title>
+        </head>
+
+        <body>
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+            integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+
+
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand"> &nbsp;&nbsp;&nbsp;Reporte</a>
+        </nav>
+
+        """
+
+    html_pie="""
+
+
+            <br><br><br><br><br><br>
+            <footer>
+            </footer>
+
+            <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+        </body>
+        <style>
+            table {
+            border: #b2b2b2 1px solid;
+            border-collapse: separate;
+
+            }
+            th {
+            border: black 1px solid;
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #357baa;
+            color: white;
+            }
+            td, th {
+            border: 1px solid #ddd;
+            padding: 8px;
+            }
+
+            tr:nth-child(even){background-color: #c0c0c0;}
+
+            tr:hover {background-color: #ddd;}
+
+
+            </style>
+
+        </body>
+            """
+
+    html_tecnico = """
+    <iframe src="Manual_Tecnico.pdf" height="100%" width="100%"></iframe>
+
+    """
+    html = html_cabeza  + html_tecnico +  html_pie    
+
+    f.write(html)     
+    f.close()     
+    file = webbrowser.open('Tecnico.html') 
     
 
     # -----------------------------------------------------------------------------------------------------------------------
@@ -1249,7 +1328,7 @@ def combobox_estado():
     elif comboReportes.get()=="Manual de Usuario":
         print("Manual de Usuario")
     elif comboReportes.get()=="Manual Técnico":
-        print("Manual Técnico")
+        manual_tecnico()
 
 boton1 = tkinter.Button(frameAr, text="Cargar", fg="white", font=(
     "broadway 12 bold"), command=buscador_archivo, borderwidth=0, bg="grey")
